@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  traefik:
+    image: traefik:1.7
+    command: -c /traefik.toml
+    ports:
+      - "80:80"
+      - "8080:8080"
+    networks:
+      - traefik
+    volumes:
+      - ./traefik.toml:/traefik.toml
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./logs:/var/log
+
+  whoami1:
+    image: emilevauge/whoami
+    networks:
+      - traefik
+    labels:
+      - "traefik.backend=whoami"
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:alfresco-triall.dev.sphereon.com"
+
+  traefik-cas:
+    build: ../../
+    ports:
+      - "40000:40000"
+    networks:
+      - traefik
+
+networks:
+  traefik:
