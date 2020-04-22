@@ -24,7 +24,10 @@ services:
       - "traefik.frontend.rule=Host:alfresco-triall.dev.sphereon.com"
 
   traefik-cas:
+    image: sphereon/traefik-cas
     build: ../../
+    environment:
+      - CAS_BASE_URL=https://cas.dev.sphereon.com/cas
     ports:
       - "40000:40000"
     networks:

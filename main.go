@@ -13,7 +13,7 @@ func main() {
 	// Build server
 	server := server.NewServer()
 
-	log.Info("Starting server on :4188")
+	log.Info("Starting server on " + server.Config.ListenAddress)
 	server.Start()
 
 }

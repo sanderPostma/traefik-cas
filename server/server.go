@@ -7,16 +7,20 @@ import (
 )
 
 type Server struct {
+	Config    *Config
 	casClient *cas.Client
 	mux       *http.ServeMux
 }
 
 func NewServer() *Server {
-	url, _ := url.Parse("https://cas.dev.sphereon.com/cas")
+	config := NewConfig()
 
-	return &Server{casClient: cas.NewClient(&cas.Options{
-		URL: url,
-	})}
+	url, _ := url.Parse(config.AuthHost)
+
+	return &Server{Config: config,
+		casClient: cas.NewClient(&cas.Options{
+			URL: url,
+		})}
 }
 
 func (s *Server) Start() {
@@ -25,7 +29,7 @@ func (s *Server) Start() {
 	s.mux.Handle("/", s)
 
 	server := &http.Server{
-		Addr:    ":4188",
+		Addr:    s.Config.ListenAddress,
 		Handler: NewRequestProcessorHandler(s),
 	}
 
@@ -49,7 +53,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	username := cas.Username(r)
-	log.Debugf("Setting header %s", username)
-	w.Header().Set("X-Forwarded-User", username)
+	log.Debugf("Setting header %s to %s", s.Config.UserHeaderName, username)
+	w.Header().Set(s.Config.UserHeaderName, username)
 	w.WriteHeader(200)
 }

@@ -3,9 +3,9 @@ module traefik-cas
 go 1.14
 
 require (
-    github.com/containous/traefik/v2 v2.1.2
-    github.com/sirupsen/logrus v1.4.2
-    gopkg.in/cas.v2 v2.2.0
+	github.com/containous/traefik/v2 v2.1.2 // indirect
+	github.com/sirupsen/logrus v1.4.2
+	gopkg.in/cas.v2 v2.2.0
 )
 
 // From traefik
